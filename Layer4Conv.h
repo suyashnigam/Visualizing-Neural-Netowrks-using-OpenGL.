@@ -6,7 +6,7 @@ class Layer4_conv
 {
 public:
 	std::vector<std::vector<std::vector<double>>> input3D{ 0.0 };
-	int flag_layer = 1;
+	int flag_layer = 4;
 	const int c = 32;
 	const int size = 14;
 	double output_conv[14 * 14][32] = { 0 };//Output of all the 16 images in columns

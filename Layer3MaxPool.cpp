@@ -1,4 +1,3 @@
- 
 #include "DisplayLayer.h"
 #include <stdio.h>
 #include <iostream>
@@ -7,7 +6,7 @@
 #include "Layer3MaxPool.h"
 
 
-double max1(double e, double b, double c, double d)
+double layer3_MaxPool::max1(double e, double b, double c, double d)
 {
 	double a[4];
 	a[0] = e;
@@ -24,16 +23,6 @@ double max1(double e, double b, double c, double d)
 	}
 	return max;
 }
-/*
-layer3_MaxPool::layer3_MaxPool(void)
-{
-	output_maxP = new double*[16];
-	for (int i = 0; i < 16; i++)
-	{
-		output_maxP[i] = new double[14*14];
-	}
-}
-*/
 
 void layer3_MaxPool::maxP(double input[28 * 28][16])
 {
@@ -60,9 +49,6 @@ void layer3_MaxPool::maxP(double input[28 * 28][16])
 		
 	}
 }
-
-
-
 
 int layer3_MaxPool::parameter()
 
@@ -93,7 +79,7 @@ for (int i = 0; i < out_size*out_size; i++)
 }
 }
 DisplayLayer dispLay;
-dispLay.x_l = 200; //Completely arbitrary
+dispLay.x_l = 200; //Change This
 dispLay.y_l = 350;
 dispLay.DrawLayer(n, out_size, arr);
 }

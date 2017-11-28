@@ -157,7 +157,7 @@ double** ParseWeights(char filename[], int start, int end)
 				{
 					break;
 				}
-						printf("%d\n", num_filters);
+						//printf("%d\n", num_filters);
 			}
 		}
 		

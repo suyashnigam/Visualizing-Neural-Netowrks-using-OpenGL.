@@ -3,16 +3,16 @@
 #include<iostream>
 #include "Vector2Image.h"
 #include "Image2Vector.h"
-#include "Layer4Conv.h"
+#include "Layer7Conv.h"
 #include <vector>
 #include "ParseString.h"
 using namespace std;
 
 
-void Layer4_conv::conv(double input[14*14][16])
+void Layer7_conv::conv(double input[7 * 7][32])
 {
-	int height = 16, width = 16, depth = 16;//Including the padding as well
-	//Initialize the Vector
+	int height = 9, width = 9, depth = 32, filters = 64;;//Including the padding as well
+											//Initialize the Vector
 	input3D.resize(height);
 	for (int i = 0; i < height; ++i)
 	{
@@ -22,30 +22,31 @@ void Layer4_conv::conv(double input[14*14][16])
 			input3D[i][j].resize(depth);
 		}
 	}
-	
+
 	//Copying the incoming 2D matrix into the 3D Vector
-	for (int k = 0; k < 16; ++k)
+	for (int k = 0; k < depth; ++k)
 	{
-		
-		for (int j = 0; j < 14; ++j)
+
+		for (int j = 0; j < size; ++j)
 		{
-			for (int i = 0; i < 14; i++)
+			for (int i = 0; i < size; i++)
 			{
-				input3D[j+1][i+1][k] = input[(j)*14+i][k];
+				input3D[j + 1][i + 1][k] = input[(j) * size + i][k];
 			}
 		}
 	}
-	
-	for (int filt_channel = 0; filt_channel < 32; filt_channel++)
+
+	for (int filt_channel = 0; filt_channel < filters; filt_channel++)
 	{
-		
-		double **filters = ParseWeights("Weights_5.txt", filt_channel*16,(filt_channel+1)*16);
-		
+
+		double **filters = ParseWeights("Weights_8.txt", filt_channel * depth, (filt_channel + 1) * depth);
+
 		//Convolution Operation
 		double sum = 0;
-		for (int m = 0; m < 16; ++m)
+		//loop for each filter
+		for (int m = 0; m < depth; ++m)
 		{
-		
+
 			//Convert filter[3*3][m] into filter_buffer[3][3]
 			//Convert the 9 element column of a 2D array into another array
 			//Define buffers for each channel
@@ -70,14 +71,14 @@ void Layer4_conv::conv(double input[14*14][16])
 							sum = sum + filter_buffer[k][l] * input3D[i + k][j + l][m];
 						}
 					}
-					output_conv[14 * i + j][filt_channel] = output_conv[14 * i + j][filt_channel] + sum;
+					output_conv[size * i + j][filt_channel] = output_conv[size * i + j][filt_channel] + sum;
 				}
 			}
 		}
 	}
 }
 
-void Layer4_conv::Show(int n)
+void Layer7_conv::Show(int n)
 {
 	double** arr;
 	arr = new double*[n];
@@ -95,7 +96,7 @@ void Layer4_conv::Show(int n)
 	}
 
 	DisplayLayer dispLay;
-	dispLay.x_l = 150;
+	dispLay.x_l = 550;
 	dispLay.y_l = 150;
 
 	dispLay.DrawLayer(n, size, arr);

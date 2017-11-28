@@ -16,6 +16,10 @@
 #include "Layer2Relu.h"
 #include "Layer3MaxPool.h"
 #include "Layer4Conv.h"
+#include "Layer5ReLU.h"
+#include "Layer6MaxPool.h"
+#include "Layer7Conv.h"
+#include "Layer8ReLU.h"
 
 
 int main(void)
@@ -32,6 +36,11 @@ int main(void)
 	Layer2_Relu ReLU_layer2;
 	layer3_MaxPool MaxPool_layer3;
 	Layer4_conv conv_layer4;
+	Layer5_Relu ReLU_layer5;
+	layer6_MaxPool MaxPool_layer6;
+	Layer7_conv conv_layer7;
+	Layer8_Relu ReLU_layer8;
+	
 
 	for (;;)
 	{
@@ -59,6 +68,10 @@ int main(void)
 			ReLU_layer2.ReLU(conv_layer1.output_conv);
 			MaxPool_layer3.maxP(ReLU_layer2.output_ReLU);
 			conv_layer4.conv(MaxPool_layer3.output_maxP);
+			ReLU_layer5.ReLU(conv_layer4.output_conv);
+			MaxPool_layer6.maxP(ReLU_layer5.output_ReLU);
+			conv_layer7.conv(ReLU_layer5.output_ReLU);
+			ReLU_layer8.ReLU(conv_layer7.output_conv);
 			
 			flag = 0;
 			flag_2 = 1;
@@ -69,6 +82,8 @@ int main(void)
 			conv_layer1.Show(2);
 			MaxPool_layer3.show(1);
 			conv_layer4.Show(10);
+			MaxPool_layer6.show(3);
+			conv_layer7.Show(5);
 		}
 		FsSwapBuffers();
 		FsSleep(5);
