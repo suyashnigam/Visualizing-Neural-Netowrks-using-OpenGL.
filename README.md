@@ -1,1 +1,1 @@
-# Visualizing-Neural-Netowrks-using-OpenGL.
+# Visualizing-Neural-Networks-using-OpenGL.
