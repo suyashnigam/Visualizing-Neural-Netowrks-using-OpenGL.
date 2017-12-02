@@ -9,6 +9,7 @@
 void Layer1_Conv::conv(double **input)
 {
 	double **filters = ParseWeights("Weights_2.txt", 0, 16);
+	double *bias = ParseBias("bias_2.txt", 0, 16);
 	for (int i = 0; i < size; i++)
 	{
 		for (int j = 0; j < size; j++)
@@ -72,7 +73,7 @@ void Layer1_Conv::conv(double **input)
 						sum = sum + filter_buffer[k][l] * conv_im[i + k][j + l];
 					}
 				}
-				output_buffer[i][j] = sum;
+				output_buffer[i][j] = sum+bias[m];
 			}
 		}
 
@@ -80,7 +81,7 @@ void Layer1_Conv::conv(double **input)
 		output_buffer_col = Image2Vec(output_buffer, size);
 		for (int k = 0; k < size*size; ++k)
 		{
-			output_conv[k - 1][m] = output_buffer_col[k];
+			output_conv[k][m] = output_buffer_col[k];
 		}
 	}
 
@@ -104,7 +105,7 @@ void Layer1_Conv::Show(int n)
 	}
 
 	DisplayLayer dispLay;
-	dispLay.x_l = 250;
+	dispLay.x_l = 400;
 	dispLay.y_l = 500;
 
 	dispLay.DrawLayer(n, size, arr);

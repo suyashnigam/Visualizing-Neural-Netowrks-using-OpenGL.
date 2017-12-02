@@ -79,7 +79,7 @@ for (int i = 0; i < out_size*out_size; i++)
 }
 }
 DisplayLayer dispLay;
-dispLay.x_l = 200; //Change This
+dispLay.x_l = 400; //Change This
 dispLay.y_l = 350;
 dispLay.DrawLayer(n, out_size, arr);
 }

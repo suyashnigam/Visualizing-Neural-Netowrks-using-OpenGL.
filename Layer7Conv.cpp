@@ -13,6 +13,7 @@ void Layer7_conv::conv(double input[7 * 7][32])
 {
 	int height = 9, width = 9, depth = 32, filters = 64;;//Including the padding as well
 											//Initialize the Vector
+	double *bias = ParseBias("bias_8.txt", 0, 64);
 	input3D.resize(height);
 	for (int i = 0; i < height; ++i)
 	{
@@ -71,7 +72,7 @@ void Layer7_conv::conv(double input[7 * 7][32])
 							sum = sum + filter_buffer[k][l] * input3D[i + k][j + l][m];
 						}
 					}
-					output_conv[size * i + j][filt_channel] = output_conv[size * i + j][filt_channel] + sum;
+					output_conv[size * i + j][filt_channel] = output_conv[size * i + j][filt_channel] + sum+bias[filt_channel];
 				}
 			}
 		}
@@ -96,8 +97,8 @@ void Layer7_conv::Show(int n)
 	}
 
 	DisplayLayer dispLay;
-	dispLay.x_l = 550;
-	dispLay.y_l = 150;
+	dispLay.x_l = 400;
+	dispLay.y_l = 125;
 
 	dispLay.DrawLayer(n, size, arr);
 }

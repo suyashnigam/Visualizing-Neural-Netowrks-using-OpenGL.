@@ -12,6 +12,7 @@ using namespace std;
 void Layer4_conv::conv(double input[14*14][16])
 {
 	int height = 16, width = 16, depth = 16;//Including the padding as well
+	double *bias = ParseBias("bias_5.txt", 0, 32);
 	//Initialize the Vector
 	input3D.resize(height);
 	for (int i = 0; i < height; ++i)
@@ -70,7 +71,7 @@ void Layer4_conv::conv(double input[14*14][16])
 							sum = sum + filter_buffer[k][l] * input3D[i + k][j + l][m];
 						}
 					}
-					output_conv[14 * i + j][filt_channel] = output_conv[14 * i + j][filt_channel] + sum;
+					output_conv[14 * i + j][filt_channel] = output_conv[14 * i + j][filt_channel] + sum+bias[filt_channel];
 				}
 			}
 		}
@@ -95,8 +96,8 @@ void Layer4_conv::Show(int n)
 	}
 
 	DisplayLayer dispLay;
-	dispLay.x_l = 150;
-	dispLay.y_l = 150;
+	dispLay.x_l = 400;
+	dispLay.y_l = 275;
 
 	dispLay.DrawLayer(n, size, arr);
 }

@@ -80,7 +80,7 @@ void layer6_MaxPool::show(int n)
 		}
 	}
 	DisplayLayer dispLay;
-	dispLay.x_l = 100; //Change This - Iterate
-	dispLay.y_l = 500;
+	dispLay.x_l = 400; //Change This - Iterate
+	dispLay.y_l = 200;
 	dispLay.DrawLayer(n, out_size, arr);
 }
