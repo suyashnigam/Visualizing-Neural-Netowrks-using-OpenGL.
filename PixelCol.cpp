@@ -1,6 +1,6 @@
 #include "PixelCol.h"
 #include "fssimplewindow.h"
-
+#include "ysglfontdata.h"
 
 
 int **myMesh(int windowSize)
@@ -46,21 +46,33 @@ int **myMesh(int windowSize)
 
 
 
-void DrawXButton(const int bX, const int bY, const int size)
+void DrawXGoButton(const int bX, const int bY, const int size)
 {
+	//X Button
 	glColor3ub(0, 0, 0);
 	glBegin(GL_LINE_LOOP);
-	glVertex2i(bX, bY + size + 20);
+	glVertex2i(bX, bY + size + 45);
 	glVertex2i(bX, bY + size + 5);
-	glVertex2i(bX + 15, bY + size + 5);
-	glVertex2i(bX + 15, bY + size + 20);
+	glVertex2i(bX + 40, bY + size + 5);
+	glVertex2i(bX + 40, bY + size + 45);
 	glEnd();
-	glBegin(GL_LINES);
-	glVertex2i(bX, bY + size + 20);
-	glVertex2i(bX + 15, bY + size + 5);
-	glVertex2i(bX, bY + size + 5);
-	glVertex2i(bX + 15, bY + size + 20);
+
+	glRasterPos2d(bX + 10, bY + size + 35);
+	YsGlDrawFontBitmap20x32("x");
+
+	//Go Button
+	glBegin(GL_LINE_LOOP);
+	glVertex2i(bX + size - 40, bY + size + 5);
+	glVertex2i(bX + size, bY + size + 5);
+	glVertex2i(bX + size, bY + size + 45);
+	glVertex2i(bX + size - 40, bY + size + 45);
 	glEnd();
+
+	glRasterPos2d(bX + size - 35, bY + size + 35);
+	YsGlDrawFontBitmap16x24("Go");
+
+	glRasterPos2d(bX - 10, bY - 10);
+	YsGlDrawFontBitmap10x14("Draw a Number");
 }
 
 PixelCol::PixelCol(int x, int y)
@@ -120,13 +132,10 @@ void PixelCol::Draw(const int bX, const int bY, const int size)
 			glEnd();
 		}
 	}
-	DrawXButton(bX, bY, size);
-
-	
-
+	DrawXGoButton(bX, bY, size);
 }
 
-double** PixelCol::Downsample(const int size, const int dScale)
+double** PixelCol::Downsample(const int size, const int dScale, double** ImageOut)
 {
 	//convert 1D image to 2D using Sagar's Code 
 	double** pixel_2d_arr;
@@ -146,10 +155,7 @@ double** PixelCol::Downsample(const int size, const int dScale)
 	//downsample the Image to a 28x28 image using Krishna's code
 	const int n2 = size / dScale;
 	int windowSize = dScale*dScale;
-	double** ImageOut = new double*[n2];
-	for (int i = 0; i < n2; i++) {
-		ImageOut[i] = new double[n2];
-	}
+
 	// Compute the n2 x n2 image from n1 x n1
 	for (int i = 0; i < n2; i++) {
 		for (int j = 0; j < n2; j++) {
@@ -164,12 +170,12 @@ double** PixelCol::Downsample(const int size, const int dScale)
 
 			// pixMove is nothing but meshGrid(1:4,1:4)-1 
 			int **temp = myMesh(dScale);
-			int *pixMoveX = temp[0], *pixMoveY = temp[1];
+			//int *pixMoveX = temp[0], *pixMoveY = temp[1];
 
 			// Calculate the pixel positions wrt curPixel
 			for (int iMove = 0; iMove < windowSize; iMove++) {
-				x[iMove] = curPixel[0] + pixMoveX[iMove];
-				y[iMove] = curPixel[1] + pixMoveY[iMove];
+				x[iMove] = curPixel[0] + temp[0][iMove];
+				y[iMove] = curPixel[1] + temp[0][iMove];
 			}
 
 			// Calculate the no. of pixels which are activated (0 or 1) in the window
@@ -181,16 +187,26 @@ double** PixelCol::Downsample(const int size, const int dScale)
 				nPix++;
 			}
 			// Threshold of just greater than half
-			if (sum > windowSize / 2 - 1)
-				ImageOut[i][j] = 1;
+			if (sum > windowSize / 2)
+				ImageOut[i][j] = 255;
 			else
 				ImageOut[i][j] = 0;
+			
+			delete[] temp[0];
+			delete[] temp[1];
+			delete[] x;
+			delete[] y;
 		}
+	}
+	// CleanUp
+	for (int i = 0; i < size; i++)
+	{
+		delete[] pixel_2d_arr[i];
 	}
 	return ImageOut;
 }
 
-void PixelCol::MouseEventLooping(int bX, int sizeInp, int bY, int lb, int mb, int rb, int mx, int my,int &flag)
+void PixelCol::MouseEventLooping(int bX, int sizeInp, int bY, int lb, int mb, int rb, int mx, int my,int &flag,int &flag_2, int &flag_exit,double **ImageOut)
 {
 	
 	
@@ -199,12 +215,16 @@ void PixelCol::MouseEventLooping(int bX, int sizeInp, int bY, int lb, int mb, in
 		SetColor(mx, my, bX, bY, sizeInp);
 	}//set pixels to white
 
-	if (lb == 1 && mx > bX+sizeInp-15 && mx < bX + sizeInp && my > bY+sizeInp && my < bY + sizeInp+15)
+	if (lb == 1 && mx > bX + sizeInp - 40 && mx < bX + sizeInp && my > bY + sizeInp  && my < bY + sizeInp + 45)
 	{
 		flag = 1;
 	}
 
-	if (lb == 1 && mx > bX && mx < bX + 15 && my > bY + sizeInp + 5 && my < bY + sizeInp + 20)    //check if left mouse button is pressed and mouse is over the X Button
+	if (lb == 1 && mx > bX && mx < bX + 40 && my > bY + sizeInp + 5 && my < bY + sizeInp + 45)    //check if left mouse button is pressed and mouse is over the X Button
+	{ 
 		Initialize(sizeInp);
+		flag = 1;
+		flag_exit=1;
 
+	}
 }

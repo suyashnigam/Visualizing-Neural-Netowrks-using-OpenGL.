@@ -73,5 +73,11 @@ void Images::DrawImage(double bmp[]) const
 
 		}
 	}
+	for (int i = 0; i < pixel_length; i++) {
+		delete[] pixel_2d_arr[i];
+	}
+	for (int i = 0; i <4* pixel_length; i++) {
+		delete[] upscale_image[i];
+	}
 
 }

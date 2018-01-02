@@ -111,7 +111,6 @@ double** ParseWeights(char filename[], int start, int end)
 	{
 		filter[i] = new double[9];
 	}
-	///////////////////////////
 
 	//Store the weigths.................
 	FILE *fp1;
@@ -151,6 +150,59 @@ double** ParseWeights(char filename[], int start, int end)
 						*(filter[count] + 3 * i + 1) = atof(w2);
 						*(filter[count] + 3 * i + 2) = atof(w3);
 					}
+					count++;
+				}
+				if (num_filters > end)
+				{
+					break;
+				}
+						//printf("%d\n", num_filters);
+			}
+		}
+		
+	}
+	fclose(fp1);
+
+	return filter;
+
+}
+
+double* ParseBias(char filename[], int start, int end)
+{
+	
+	int num = 0;
+
+	num = end - start;
+	//Initialize 2d array pointer
+	double* filter;
+	filter = new double[num];
+	
+	//Store the weigths.................
+	FILE *fp1;
+	fp1 = fopen(filename, "r");
+	if (fp1 != NULL)
+	{
+		char str[256];
+		char get_line[256];
+		int num_filters = 0;
+		int count = 0;
+		while (fgets(str, 255, fp1) != NULL)
+		{
+			str[255] = 0;
+			get_line[255] = 0;
+
+			RemoveTailControlCode(str);
+			if (str[0] == 'v')
+			{
+				num_filters++;
+				if (num_filters > start && num_filters <= end)
+				{
+					fgets(get_line, 255, fp1);
+					int nWord, wordTop[16], wordLength[16];
+					char w[256];
+					fgets(get_line, 255, fp1);
+				
+					filter[count] = atof(get_line);
 					count++;
 				}
 				if (num_filters > end)

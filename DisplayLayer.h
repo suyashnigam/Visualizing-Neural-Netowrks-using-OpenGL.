@@ -13,7 +13,7 @@ public:
 
 	int x_l; //initial x of the layer
 	int y_l; //top y of each images in layer
-	int gap = 20; //gap between images
+	int gap; //gap between images
 
 	DisplayLayer();
 	~DisplayLayer();

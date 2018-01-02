@@ -6,12 +6,6 @@
 #include "Layer8ReLU.h"
 
 
-/*
-char* Layer2_Relu::info()
-{
-return info;
-}
-*/
 void Layer8_Relu::ReLU(double input[7*7][64])
 {
 
@@ -26,7 +20,9 @@ void Layer8_Relu::ReLU(double input[7*7][64])
 			else
 				output_ReLU[i][j] = input[i][j];
 
+			//std::cout << output_ReLU[i][j]<<"\n";
 		}
+
 	}
 	//The output into the next function should be object.output_ReLU
 }

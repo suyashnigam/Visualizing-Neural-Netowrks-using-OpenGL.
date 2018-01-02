@@ -12,8 +12,10 @@ public:
 	double output_conv[14 * 14][32] = { 0 };//Output of all the 16 images in columns
 	//double *output_buffer_col;
 
-	void conv(double input[14*14][16]);
+	void conv(double input[14 * 14][16], double ***weights, double *bias);
+
 	void Show(int n);
+	void LayerClean();
 };
 
 #endif
