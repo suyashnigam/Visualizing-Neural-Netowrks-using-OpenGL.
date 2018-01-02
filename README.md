@@ -7,4 +7,4 @@ The activation maps of some of the Convolutional Layers are also visualized. The
 
 The network was trained in MATLAB, the weights extracted and then used for classifying the user-drawn number.
 
-To run the code, please download the zipped file "Application_final.zip" and run the application file.
+To run the code, please download all the files and extract the zipped folder "Weights.rar" and run the application file "Predict_number.exe".
