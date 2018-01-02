@@ -25,8 +25,8 @@ void DisplayLayer::CleanUp()
 
 void DisplayLayer::DrawLayer(int N_I, int pixels, double **arr)
 {
-
 	n_images = N_I;
+	CleanUp();
 	img = new Images[n_images];
 	for (int i = 0; i < n_images; i++)
 	{
@@ -35,6 +35,6 @@ void DisplayLayer::DrawLayer(int N_I, int pixels, double **arr)
 		img[i].SetPx(pixels); //set pixel length for the image
 		img[i].DrawImage(arr[i]);
 	}
-
+	//delete[] img;
 
 }

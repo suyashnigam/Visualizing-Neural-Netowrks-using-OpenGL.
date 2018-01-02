@@ -5,10 +5,12 @@
 #include "Vector2Image.h"
 #include "Image2Vector.h"
 #include "ParseString.h"
+#include "ysglfontdata.h"
+#include "fssimplewindow.h"
 
-void Layer1_Conv::conv(double **input)
+void Layer1_Conv::conv(double **input,double **filters,double *bias)
 {
-	double **filters = ParseWeights("Weights_2.txt", 0, 16);
+	
 	for (int i = 0; i < size; i++)
 	{
 		for (int j = 0; j < size; j++)
@@ -59,7 +61,7 @@ void Layer1_Conv::conv(double **input)
 		}
 		//Obtain filter_buffer[3][3]
 		filter_buffer = Vector2Image(column_filter_buffer, 3);
-
+		//std::cout << "\n\n now printing Conv1 output \n\n";
 		for (int i = 0; i < size; i++)
 		{
 			for (int j = 0; j < size; j++)
@@ -72,18 +74,29 @@ void Layer1_Conv::conv(double **input)
 						sum = sum + filter_buffer[k][l] * conv_im[i + k][j + l];
 					}
 				}
-				output_buffer[i][j] = sum;
+				output_buffer[i][j] = sum + bias[m];
+				//if (m == 0)
+				//	std::cout << output_buffer[i][j] << " ";
 			}
+			//std::cout << "\n";
 		}
+		//std::cout << "\n conv1 done \n";
 
 		//Convert output_buffer[28][28] into output[28*28][m]
 		output_buffer_col = Image2Vec(output_buffer, size);
 		for (int k = 0; k < size*size; ++k)
 		{
-			output_conv[k - 1][m] = output_buffer_col[k];
+			output_conv[k][m] = output_buffer_col[k];
 		}
-	}
 
+		// Cleaning Up
+	
+	}
+	for (int i = 0; i <size; i++)
+	{
+		delete[] output_buffer[i];
+	}
+	delete[] output_buffer_col;
 }
 
 void Layer1_Conv::Show(int n)
@@ -100,12 +113,27 @@ void Layer1_Conv::Show(int n)
 		for (int i = 0; i < size*size; i++)
 		{
 			arr[j][i] = output_conv[i][j];
+
 		}
 	}
 
 	DisplayLayer dispLay;
-	dispLay.x_l = 250;
-	dispLay.y_l = 500;
+	dispLay.x_l = 394;
+	dispLay.y_l = 550;
+	dispLay.gap = 20;
 
 	dispLay.DrawLayer(n, size, arr);
+	glColor3ub(0, 0, 0);
+	glRasterPos2d(225, 610);
+	YsGlDrawFontBitmap10x14("Convolution 1");
+	glRasterPos2d(1215, 610);
+	YsGlDrawFontBitmap10x14("6/16 Images");
+	dispLay.CleanUp();
+	
+
+	// Cleaning Up
+	for (int i = 0; i <n; i++)
+	{
+		delete[] arr[i];
+	}
 }

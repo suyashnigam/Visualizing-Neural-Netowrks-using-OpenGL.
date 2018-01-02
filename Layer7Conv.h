@@ -11,8 +11,7 @@ public:
 	const int size = 7;
 	double output_conv[7 * 7][64] = { 0.0 };//Output of all the 64 images in columns
 	//double *output_buffer_col;
-
-	void conv(double input[7 * 7][32]);
+	void conv(double input[7 * 7][32], double ***weights, double *bias);
 	void Show(int n);
 };
 

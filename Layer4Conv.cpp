@@ -6,10 +6,12 @@
 #include "Layer4Conv.h"
 #include <vector>
 #include "ParseString.h"
+#include "fssimplewindow.h"
+#include "ysglfontdata.h"
 using namespace std;
 
 
-void Layer4_conv::conv(double input[14*14][16])
+void Layer4_conv::conv(double input[14*14][16],double ***weights,double *bias)
 {
 	int height = 16, width = 16, depth = 16;//Including the padding as well
 	//Initialize the Vector
@@ -20,6 +22,14 @@ void Layer4_conv::conv(double input[14*14][16])
 		for (int j = 0; j < width; ++j)
 		{
 			input3D[i][j].resize(depth);
+		}
+	}
+	
+	for (int k = 0; k < 32; k++)
+	{
+		for (int j = 0; j < 14 * 14; j++)
+		{
+			output_conv[j][k] = 0;
 		}
 	}
 	
@@ -39,7 +49,7 @@ void Layer4_conv::conv(double input[14*14][16])
 	for (int filt_channel = 0; filt_channel < 32; filt_channel++)
 	{
 		
-		double **filters = ParseWeights("Weights_5.txt", filt_channel*16,(filt_channel+1)*16);
+		double **filters = weights[filt_channel];
 		
 		//Convolution Operation
 		double sum = 0;
@@ -70,10 +80,17 @@ void Layer4_conv::conv(double input[14*14][16])
 							sum = sum + filter_buffer[k][l] * input3D[i + k][j + l][m];
 						}
 					}
-					output_conv[14 * i + j][filt_channel] = output_conv[14 * i + j][filt_channel] + sum;
+					output_conv[14 * i + j][filt_channel] += sum;
 				}
 			}
+			delete[] filter_buffer;
 		}
+		for (int i = 0; i < size; i++)
+		{
+			for (int j = 0; j < size; j++)
+				output_conv[size * i + j][filt_channel] += bias[filt_channel];
+		}
+		
 	}
 }
 
@@ -95,9 +112,24 @@ void Layer4_conv::Show(int n)
 	}
 
 	DisplayLayer dispLay;
-	dispLay.x_l = 150;
-	dispLay.y_l = 150;
+	dispLay.x_l = 368;
+	dispLay.y_l = 335;
+	dispLay.gap = 40;
 
 	dispLay.DrawLayer(n, size, arr);
+	glColor3ub(0, 0, 0);
+	glRasterPos2d(225, 370);
+	YsGlDrawFontBitmap10x14("Convolution 2");
+	glRasterPos2d(1215, 370);
+	YsGlDrawFontBitmap10x14("9/32 Images");
+	dispLay.CleanUp();
+
+
+	// Cleaning Up
+	for (int i = 0; i <n; i++)
+	{
+		delete[] arr[i];
+	}
+
 }
 

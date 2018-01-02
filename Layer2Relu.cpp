@@ -8,27 +8,21 @@
 #include "Layer2Relu.h"
 
 
-/*
-char* Layer2_Relu::info()
+void Layer2_Relu::ReLU(double input[28 * 28][16])
 {
-	return info;
-}
-*/
- void Layer2_Relu::ReLU(double input[28*28][16]) 
- {
 
- 	for (int i=0;i<28*28;i++)
- 		{
- 			for (int j=0;j<16;j++)
- 			{
- 				if(input[i][j]<0)
- 				{
- 					output_ReLU[i][j]=0;
- 				}
- 				else
- 					output_ReLU[i][j]=input[i][j];
-					
- 			}
- 		}
+	for (int i = 0; i < 28 * 28; i++)
+	{
+		for (int j = 0; j < 16; j++)
+		{
+			if (input[i][j] < 0)
+			{
+				output_ReLU[i][j] = 0.0;
+			}
+			else
+				output_ReLU[i][j] = input[i][j];
+
+		}
+	}
 	//The output into the next function should be object.output_ReLU
- }
+}
